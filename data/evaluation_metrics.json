@@ -1,0 +1,278 @@
+{
+  "project_id": "CSEAIML2026-P26",
+  "project_title": "Multilingual AI Assistant for Tourist Information and Local Language Translation",
+  "intent_classification": {
+    "accuracy": 0.7222,
+    "classification_report": {
+      "ask_attraction": {
+        "precision": 0.8333333333333334,
+        "recall": 0.5555555555555556,
+        "f1-score": 0.6666666666666666,
+        "support": 9.0
+      },
+      "ask_etiquette": {
+        "precision": 0.7142857142857143,
+        "recall": 0.625,
+        "f1-score": 0.6666666666666666,
+        "support": 8.0
+      },
+      "ask_transport": {
+        "precision": 0.5384615384615384,
+        "recall": 0.875,
+        "f1-score": 0.6666666666666666,
+        "support": 8.0
+      },
+      "bargaining_vendor": {
+        "precision": 0.6666666666666666,
+        "recall": 0.8,
+        "f1-score": 0.7272727272727273,
+        "support": 5.0
+      },
+      "currency_budget": {
+        "precision": 1.0,
+        "recall": 0.6,
+        "f1-score": 0.75,
+        "support": 5.0
+      },
+      "emergency_sos": {
+        "precision": 1.0,
+        "recall": 0.7142857142857143,
+        "f1-score": 0.8333333333333334,
+        "support": 7.0
+      },
+      "food_recommendation": {
+        "precision": 0.7,
+        "recall": 0.875,
+        "f1-score": 0.7777777777777778,
+        "support": 8.0
+      },
+      "general_greeting": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1-score": 0.75,
+        "support": 4.0
+      },
+      "accuracy": 0.7222222222222222,
+      "macro avg": {
+        "precision": 0.7753434065934066,
+        "recall": 0.7243551587301587,
+        "f1-score": 0.7297979797979799,
+        "support": 54.0
+      },
+      "weighted avg": {
+        "precision": 0.7676909510242844,
+        "recall": 0.7222222222222222,
+        "f1-score": 0.7242330714552936,
+        "support": 54.0
+      }
+    },
+    "classes": [
+      "ask_attraction",
+      "ask_etiquette",
+      "ask_transport",
+      "bargaining_vendor",
+      "currency_budget",
+      "emergency_sos",
+      "food_recommendation",
+      "general_greeting"
+    ],
+    "confusion_matrix": [
+      [
+        5,
+        0,
+        2,
+        1,
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        5,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        7,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        4,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        1,
+        0,
+        3,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        0,
+        5,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        7,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        3
+      ]
+    ]
+  },
+  "machine_translation": {
+    "hi": {
+      "bleu": 11.44,
+      "chrf": 42.6,
+      "samples": [
+        {
+          "src": "How much does this cost?",
+          "hyp": "यह कितना खर्च करता है?",
+          "ref": "यह कितने का है?"
+        },
+        {
+          "src": "Please give me a discount.",
+          "hyp": "कृपया मुझे एक वरत्ती दे दें।",
+          "ref": "कृपया मुझे छूट दीजिए।"
+        },
+        {
+          "src": "Where is the nearest railway station?",
+          "hyp": "सबसे निकट रेलवे स्टेशन कहां है?",
+          "ref": "नज़दीकी रेलवे स्टेशन कहाँ है?"
+        },
+        {
+          "src": "Please stop the car here.",
+          "hyp": "कार यहां बंद करो।",
+          "ref": "कृपया गाड़ी यहाँ रोकिए।"
+        },
+        {
+          "src": "Is this food vegetarian?",
+          "hyp": "क्या यह भोजन किसान है?",
+          "ref": "क्या यह खाना शाकाहारी है?"
+        },
+        {
+          "src": "I need help immediately.",
+          "hyp": "मैं तुरंत मदद की जरूरत है।",
+          "ref": "मुझे तुरंत मदद की ज़रूरत है।"
+        }
+      ]
+    },
+    "es": {
+      "bleu": 14.64,
+      "chrf": 55.74,
+      "samples": [
+        {
+          "src": "How much does this cost?",
+          "hyp": "¿Cuánto cuesta esto?",
+          "ref": "¿Cuánto cuesta esto?"
+        },
+        {
+          "src": "Please give me a discount.",
+          "hyp": "Es demasiado caro. ¿Puede hacer un descuento?",
+          "ref": "Por favor deme un descuento."
+        },
+        {
+          "src": "Where is the nearest railway station?",
+          "hyp": "¿Dónde está el hospital o farmacia más cercana?",
+          "ref": "¿Dónde está la estación de tren más cercana?"
+        },
+        {
+          "src": "Please stop the car here.",
+          "hyp": "Por favor, pare aquí.",
+          "ref": "Por favor pare el coche aquí."
+        },
+        {
+          "src": "Is this food vegetarian?",
+          "hyp": "¿Esto es 100% vegetariano?",
+          "ref": "¿Esta comida es vegetariana?"
+        },
+        {
+          "src": "I need help immediately.",
+          "hyp": "¡Necesito ayuda inmediatamente! Llame a la policía.",
+          "ref": "Necesito ayuda de inmediato."
+        }
+      ]
+    },
+    "fr": {
+      "bleu": 28.27,
+      "chrf": 55.52,
+      "samples": [
+        {
+          "src": "How much does this cost?",
+          "hyp": "Combien cela coûte-t-il ?",
+          "ref": "Combien cela coûte-t-il ?"
+        },
+        {
+          "src": "Please give me a discount.",
+          "hyp": "C'est trop cher. Pouvez-vous faire une réduction ?",
+          "ref": "S'il vous plaît donnez-moi une réduction."
+        },
+        {
+          "src": "Where is the nearest railway station?",
+          "hyp": "Où se trouve l'hôpital ou la pharmacie la plus proche ?",
+          "ref": "Où est la gare ferroviaire la plus proche ?"
+        },
+        {
+          "src": "Please stop the car here.",
+          "hyp": "Arrêtez-vous ici, s'il vous plaît.",
+          "ref": "Arrêtez la voiture ici s'il vous plaît."
+        },
+        {
+          "src": "Is this food vegetarian?",
+          "hyp": "Est-ce 100% végétarien ?",
+          "ref": "Cette nourriture est-elle végétarienne ?"
+        },
+        {
+          "src": "I need help immediately.",
+          "hyp": "J'ai besoin d'aide immédiatement ! Appelez la police.",
+          "ref": "J'ai besoin d'aide immédiatement."
+        }
+      ]
+    }
+  },
+  "recommendation_engine": {
+    "k": 3,
+    "precision_at_k": 0.7333,
+    "hit_rate_at_k": 1.0,
+    "mrr": 1.0
+  }
+}

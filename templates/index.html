@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TourLingo AI - Multilingual Tourist Assistant & Translation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .glassmorphism {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(229, 231, 235, 0.5);
+    }
+    .custom-scroll::-webkit-scrollbar { width: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- Top Navbar -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-amber-500 flex items-center justify-center text-white shadow-md">
+          <i class="fa-solid fa-earth-asia text-xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-blue-700 via-indigo-700 to-indigo-900 bg-clip-text text-transparent">TourLingo AI</span>
+            <span class="text-xs bg-blue-100 text-blue-800 font-semibold px-2 py-0.5 rounded-full border border-blue-200">CSE-AIML-P26</span>
+          </div>
+          <p class="text-[11px] text-slate-500 font-medium">Multilingual Tourist Information & Local Vendor Translator</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="hidden md:flex space-x-1">
+        <button onclick="switchTab('chat')" id="tab-btn-chat" class="tab-btn px-4 py-2 text-sm font-semibold rounded-lg text-blue-600 bg-blue-50 transition-all flex items-center space-x-2">
+          <i class="fa-solid fa-compass"></i><span>Tourist Guide</span>
+        </button>
+        <button onclick="switchTab('vendor')" id="tab-btn-vendor" class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100 transition-all flex items-center space-x-2">
+          <i class="fa-solid fa-comments"></i><span>Vendor Translator</span>
+        </button>
+        <button onclick="switchTab('recs')" id="tab-btn-recs" class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100 transition-all flex items-center space-x-2">
+          <i class="fa-solid fa-map-location-dot"></i><span>Nearby Places</span>
+        </button>
+        <button onclick="switchTab('offline')" id="tab-btn-offline" class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100 transition-all flex items-center space-x-2">
+          <i class="fa-solid fa-book-bookmark"></i><span>Offline Phrasebook</span>
+        </button>
+        <button onclick="switchTab('eval')" id="tab-btn-eval" class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100 transition-all flex items-center space-x-2">
+          <i class="fa-solid fa-chart-simple"></i><span>NLP Metrics</span>
+        </button>
+      </nav>
+
+      <!-- Language Selector -->
+      <div class="flex items-center space-x-2">
+        <span class="text-xs text-slate-500 font-medium hidden sm:inline"><i class="fa-solid fa-globe mr-1"></i>My Language:</span>
+        <select id="userLangSelect" onchange="onUserLangChanged()" class="text-sm bg-slate-100 border border-slate-300 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          {% for code, name in languages.items() %}
+            <option value="{{ code }}" {% if code == 'en' %}selected{% endif %}>{{ name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Tab Bar -->
+  <div class="md:hidden bg-white border-b border-slate-200 px-2 py-2 flex justify-around text-xs">
+    <button onclick="switchTab('chat')" class="flex flex-col items-center py-1 text-blue-600 font-medium">
+      <i class="fa-solid fa-compass text-base"></i><span>Guide</span>
+    </button>
+    <button onclick="switchTab('vendor')" class="flex flex-col items-center py-1 text-slate-600">
+      <i class="fa-solid fa-comments text-base"></i><span>Translate</span>
+    </button>
+    <button onclick="switchTab('recs')" class="flex flex-col items-center py-1 text-slate-600">
+      <i class="fa-solid fa-map-location-dot text-base"></i><span>Nearby</span>
+    </button>
+    <button onclick="switchTab('offline')" class="flex flex-col items-center py-1 text-slate-600">
+      <i class="fa-solid fa-book-bookmark text-base"></i><span>Phrases</span>
+    </button>
+    <button onclick="switchTab('eval')" class="flex flex-col items-center py-1 text-slate-600">
+      <i class="fa-solid fa-chart-simple text-base"></i><span>Metrics</span>
+    </button>
+  </div>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full">
+
+    <!-- ================= TAB 1: TOURIST GUIDE CHAT ================= -->
+    <div id="tab-chat" class="tab-content block">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        <!-- Chat Area (3 cols) -->
+        <div class="lg:col-span-3 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col h-[700px]">
+          <!-- Chat Header -->
+          <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-t-2xl">
+            <div class="flex items-center space-x-3">
+              <div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <div>
+                <h2 class="font-bold text-slate-800 text-sm">Multilingual Tourist Assistant</h2>
+                <div class="flex items-center space-x-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span class="text-xs text-slate-500">NLP Vector Retriever & Intent Classifier Active</span>
+                </div>
+              </div>
+            </div>
+            <button onclick="clearChat()" class="text-xs text-slate-400 hover:text-rose-500 transition-colors">
+              <i class="fa-solid fa-trash-can mr-1"></i>Clear Chat
+            </button>
+          </div>
+
+          <!-- Chat Messages Container -->
+          <div id="chatMessages" class="flex-1 p-6 overflow-y-auto space-y-4 custom-scroll">
+            <!-- Welcome Message -->
+            <div class="flex items-start space-x-3">
+              <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <div class="bg-slate-100 text-slate-800 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%] text-sm shadow-sm">
+                <p class="font-semibold text-blue-900 mb-1">Namaste & Welcome! 🙏</p>
+                <p>I am your AI tourist guide. You can ask me anything about <strong>attractions, opening hours, local transport, customs, food recommendations, or emergency contacts</strong> in your native language.</p>
+                <div class="mt-3 flex flex-wrap gap-1.5">
+                  <button onclick="useQuickPrompt('What time does Taj Mahal open and is it closed on Fridays?')" class="text-xs bg-white text-slate-700 hover:bg-blue-50 hover:text-blue-700 border border-slate-200 px-2.5 py-1 rounded-full transition-all">🕒 Taj Mahal Timings</button>
+                  <button onclick="useQuickPrompt('How do I take the Delhi Metro from airport?')" class="text-xs bg-white text-slate-700 hover:bg-blue-50 hover:text-blue-700 border border-slate-200 px-2.5 py-1 rounded-full transition-all">🚇 Delhi Metro Route</button>
+                  <button onclick="useQuickPrompt('What should I wear when visiting Hindu temples in India?')" class="text-xs bg-white text-slate-700 hover:bg-blue-50 hover:text-blue-700 border border-slate-200 px-2.5 py-1 rounded-full transition-all">🙏 Temple Dress Code</button>
+                  <button onclick="useQuickPrompt('I lost my passport, what is the emergency helpline?')" class="text-xs bg-white text-slate-700 hover:bg-rose-50 hover:text-rose-700 border border-slate-200 px-2.5 py-1 rounded-full transition-all">🚨 Emergency SOS</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Input -->
+          <div class="p-4 border-t border-slate-200 bg-white rounded-b-2xl">
+            <form onsubmit="handleChatSubmit(event)" class="flex items-center space-x-2">
+              <button type="button" onclick="startVoiceInput()" id="micBtn" title="Voice Input (Speech-to-Text)" class="p-2.5 rounded-xl bg-slate-100 hover:bg-blue-100 text-slate-600 hover:text-blue-600 transition-all">
+                <i class="fa-solid fa-microphone"></i>
+              </button>
+              <input type="text" id="chatInput" placeholder="Ask about places, metro, etiquette, food, emergency..." class="flex-1 bg-slate-100 border border-transparent focus:border-blue-500 focus:bg-white rounded-xl px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none transition-all">
+              <button type="submit" id="chatSendBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center space-x-1 shadow-sm">
+                <span>Send</span>
+                <i class="fa-solid fa-paper-plane text-xs"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Sidebar NLP Diagnostics (1 col) -->
+        <div class="space-y-6">
+          <!-- Intent Detection Monitor -->
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center justify-between">
+              <span><i class="fa-solid fa-brain mr-2 text-indigo-600"></i>NLP Intent Engine</span>
+              <span class="text-[10px] uppercase font-bold text-slate-400">Live</span>
+            </h3>
+            <div id="nlpInspectPanel" class="text-xs space-y-2.5 text-slate-600">
+              <p class="text-slate-400 italic">Submit a tourist question to view live NLP classification, confidence score & entity extraction.</p>
+            </div>
+          </div>
+
+          <!-- Quick Emergency Panel -->
+          <div class="bg-gradient-to-br from-rose-50 to-orange-50 rounded-2xl p-5 shadow-sm border border-rose-200">
+            <h3 class="font-bold text-rose-800 text-sm mb-2 flex items-center">
+              <i class="fa-solid fa-shield-heart mr-2 text-rose-600"></i>Tourist SOS Helplines
+            </h3>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-rose-100">
+                <span class="font-medium text-slate-700">Unified Emergency</span>
+                <a href="tel:112" class="font-extrabold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">112</a>
+              </div>
+              <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-rose-100">
+                <span class="font-medium text-slate-700">Tourist 24x7 Helpline</span>
+                <a href="tel:1363" class="font-extrabold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">1363</a>
+              </div>
+              <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-rose-100">
+                <span class="font-medium text-slate-700">Women Safety</span>
+                <a href="tel:1091" class="font-extrabold text-purple-600 bg-purple-50 px-2 py-0.5 rounded">1091</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 2: VENDOR REAL-TIME TRANSLATOR ================= -->
+    <div id="tab-vendor" class="tab-content hidden">
+      <div class="max-w-5xl mx-auto">
+        <!-- Banner & Offline Toggle -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-slate-200 mb-6 gap-4">
+          <div>
+            <h2 class="text-xl font-bold text-slate-800 flex items-center">
+              <i class="fa-solid fa-comments text-blue-600 mr-2.5"></i>Real-Time Tourist ⇄ Local Vendor Conversation
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">Split-screen two-way communicator for buying souvenirs, bargaining, asking directions, and ordering food.</p>
+          </div>
+
+          <!-- Offline Switch -->
+          <div class="flex items-center space-x-3 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-xs font-semibold text-slate-700 flex items-center">
+              <i class="fa-solid fa-wifi mr-1.5 text-emerald-500" id="offlineIcon"></i>
+              <span id="offlineLabel">Online NMT</span>
+            </span>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="offlineToggle" onchange="onOfflineToggleChanged()" class="sr-only peer">
+              <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+            </label>
+            <span class="text-[11px] text-amber-700 font-medium">Force Offline</span>
+          </div>
+        </div>
+
+        <!-- Split Screen Dual View -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- LEFT CARD: TOURIST SIDE -->
+          <div class="bg-white rounded-2xl shadow-sm border-2 border-blue-200 p-6 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                <span class="text-sm font-bold text-blue-700 flex items-center">
+                  <i class="fa-solid fa-user text-blue-600 mr-2"></i>Tourist View
+                </span>
+                <select id="touristLangSelect" class="text-xs bg-blue-50 border border-blue-200 rounded-lg px-2 py-1 font-semibold text-blue-900">
+                  <option value="en" selected>English</option>
+                  <option value="es">Spanish</option>
+                  <option value="fr">French</option>
+                  <option value="de">German</option>
+                  <option value="ja">Japanese</option>
+                </select>
+              </div>
+
+              <label class="block text-xs font-medium text-slate-500 mb-1">Tourist speaks / types:</label>
+              <textarea id="touristInput" rows="3" placeholder="e.g. How much does this cost? Can you give a discount?" class="w-full text-sm p-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+
+              <!-- Quick Phrase Shortcuts -->
+              <div class="mt-3">
+                <p class="text-[11px] font-semibold text-slate-400 mb-1.5 uppercase tracking-wide">Quick Bargain Phrases:</p>
+                <div class="flex flex-wrap gap-1.5">
+                  <button onclick="setTouristPhrase('How much does this cost?')" class="text-xs bg-slate-100 hover:bg-blue-100 text-slate-700 px-2 py-1 rounded-md transition-all">💰 Price?</button>
+                  <button onclick="setTouristPhrase('This is too expensive. Can you give a discount?')" class="text-xs bg-slate-100 hover:bg-blue-100 text-slate-700 px-2 py-1 rounded-md transition-all">📉 Discount?</button>
+                  <button onclick="setTouristPhrase('What is your final price?')" class="text-xs bg-slate-100 hover:bg-blue-100 text-slate-700 px-2 py-1 rounded-md transition-all">🏷️ Final Price?</button>
+                  <button onclick="setTouristPhrase('Do you accept digital payment or UPI?')" class="text-xs bg-slate-100 hover:bg-blue-100 text-slate-700 px-2 py-1 rounded-md transition-all">💳 Accept UPI?</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex space-x-2">
+              <button onclick="translateTouristToVendor()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl text-sm transition-all shadow-sm flex items-center justify-center space-x-2">
+                <span>Translate to Vendor</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- RIGHT CARD: VENDOR SIDE -->
+          <div class="bg-white rounded-2xl shadow-sm border-2 border-emerald-200 p-6 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                <span class="text-sm font-bold text-emerald-700 flex items-center">
+                  <i class="fa-solid fa-store text-emerald-600 mr-2"></i>Vendor View (Local Language)
+                </span>
+                <select id="vendorLangSelect" class="text-xs bg-emerald-50 border border-emerald-200 rounded-lg px-2 py-1 font-semibold text-emerald-900">
+                  <option value="hi" selected>Hindi (हिंदी)</option>
+                  <option value="en">English</option>
+                  <option value="es">Spanish</option>
+                  <option value="fr">French</option>
+                </select>
+              </div>
+
+              <!-- Translated Output for Vendor -->
+              <div class="bg-emerald-50/60 border border-emerald-200 rounded-xl p-4 min-h-[110px]">
+                <p class="text-xs text-emerald-700 font-semibold mb-1">Shown to Vendor:</p>
+                <div id="vendorOutputDevanagari" class="text-lg font-bold text-slate-900 mb-1">यह कितने का है?</div>
+                <div id="vendorOutputPhonetic" class="text-xs font-mono text-emerald-800 bg-white/80 px-2 py-1 rounded inline-block">
+                  Phonetic: Yeh kitne ka hai?
+                </div>
+              </div>
+
+              <!-- Audio & Speech Button -->
+              <div class="mt-4 flex items-center justify-between">
+                <button onclick="speakVendorText()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg flex items-center space-x-1 font-medium transition-all shadow-sm">
+                  <i class="fa-solid fa-volume-high"></i>
+                  <span>Play Speech (TTS)</span>
+                </button>
+                <span id="translationModeBadge" class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono">Mode: Online NMT</span>
+              </div>
+
+              <!-- Reverse: Vendor Replies -->
+              <div class="mt-5 pt-4 border-t border-slate-100">
+                <label class="block text-xs font-medium text-slate-500 mb-1">Vendor replies in Hindi:</label>
+                <div class="flex space-x-2">
+                  <input type="text" id="vendorReplyInput" placeholder="उदा. पांच सौ रुपये (500 Rupees)" class="flex-1 text-sm p-2 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                  <button onclick="translateVendorToTourist()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-2 rounded-lg font-medium transition-all">
+                    Translate Back
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 3: LOCATION RECOMMENDATIONS ================= -->
+    <div id="tab-recs" class="tab-content hidden">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-slate-200 mb-6 gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-slate-800 flex items-center">
+            <i class="fa-solid fa-map-location-dot text-indigo-600 mr-2.5"></i>Location-Based Recommendation Engine
+          </h2>
+          <p class="text-xs text-slate-500 mt-1">Ranked by Haversine geodesic distance, tourist review ratings, and destination preferences.</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-medium text-slate-600">City:</span>
+            <select id="recCitySelect" onchange="fetchRecommendations()" class="text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 font-semibold text-slate-700">
+              <option value="Delhi" selected>Delhi</option>
+              <option value="Agra">Agra</option>
+              <option value="Jaipur">Jaipur</option>
+              <option value="Varanasi">Varanasi</option>
+            </select>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-medium text-slate-600">Category:</span>
+            <select id="recCategorySelect" onchange="fetchRecommendations()" class="text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 font-semibold text-slate-700">
+              <option value="All" selected>All Categories</option>
+              <option value="Attraction">Monuments & Attractions</option>
+              <option value="Food & Dining">Food & Dining</option>
+              <option value="Religious / Cultural">Cultural & Spiritual</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommendation Cards Grid -->
+      <div id="recsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Dynamically injected cards -->
+      </div>
+    </div>
+
+    <!-- ================= TAB 4: OFFLINE PHRASEBOOK & SOS ================= -->
+    <div id="tab-offline" class="tab-content hidden">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-slate-200 mb-6 gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-slate-800 flex items-center">
+            <i class="fa-solid fa-book-bookmark text-amber-600 mr-2.5"></i>Offline Survival Phrasebook & Local Lexicon
+          </h2>
+          <p class="text-xs text-slate-500 mt-1">Zero-network survival phrases with Roman transliteration and phonetic pronunciation.</p>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="flex items-center space-x-2">
+          <span class="text-xs font-medium text-slate-600">Filter Topic:</span>
+          <select id="phraseCategorySelect" onchange="fetchPhrasebook()" class="text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 font-semibold text-slate-700">
+            <option value="All" selected>All Categories</option>
+            <option value="Bargaining & Shopping">Bargaining & Shopping</option>
+            <option value="Transport & Directions">Transport & Directions</option>
+            <option value="Food & Dietary">Food & Dietary</option>
+            <option value="Emergency & Medical">Emergency & Medical</option>
+            <option value="Basic Greetings & Courtesy">Basic Greetings</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Phrase Table -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
+            <thead class="bg-slate-50 text-slate-600 font-semibold text-xs">
+              <tr>
+                <th class="px-6 py-3.5">Category</th>
+                <th class="px-6 py-3.5">English Source</th>
+                <th class="px-6 py-3.5">Hindi (हिंदी)</th>
+                <th class="px-6 py-3.5">Phonetic Pronunciation</th>
+                <th class="px-6 py-3.5 text-center">Audio</th>
+              </tr>
+            </thead>
+            <tbody id="phraseTableBody" class="divide-y divide-slate-100 text-slate-700">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 5: NLP EVALUATION DASHBOARD ================= -->
+    <div id="tab-eval" class="tab-content hidden">
+      <div class="pb-6 border-b border-slate-200 mb-6">
+        <h2 class="text-xl font-bold text-slate-800 flex items-center">
+          <i class="fa-solid fa-chart-simple text-blue-600 mr-2.5"></i>Academic NLP Evaluation & Benchmark Metrics
+        </h2>
+        <p class="text-xs text-slate-500 mt-1">Comprehensive evaluation covering BLEU, chrF translation scores, Intent Confusion Matrix, and Recommendation MRR.</p>
+      </div>
+
+      <!-- Metrics Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <span class="text-xs font-semibold text-slate-400 uppercase">Intent Accuracy</span>
+          <div class="text-2xl font-black text-blue-600 mt-1">53.85%</div>
+          <p class="text-[11px] text-slate-500 mt-0.5">8 Tourist Intent Classes (TF-IDF + LR)</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <span class="text-xs font-semibold text-slate-400 uppercase">BLEU Score (EN ➔ HI)</span>
+          <div class="text-2xl font-black text-emerald-600 mt-1">22.68</div>
+          <p class="text-[11px] text-slate-500 mt-0.5">chrF score: 48.10 (SacreBLEU standard)</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <span class="text-xs font-semibold text-slate-400 uppercase">Recommendation Hit@3</span>
+          <div class="text-2xl font-black text-indigo-600 mt-1">100.0%</div>
+          <p class="text-[11px] text-slate-500 mt-0.5">Mean Reciprocal Rank (MRR): 1.000</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <span class="text-xs font-semibold text-slate-400 uppercase">Precision@3</span>
+          <div class="text-2xl font-black text-amber-600 mt-1">73.33%</div>
+          <p class="text-[11px] text-slate-500 mt-0.5">Geodesic distance & utility score</p>
+        </div>
+      </div>
+
+      <!-- Generated Plot Image -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        <h3 class="font-bold text-slate-800 text-sm mb-4 flex items-center">
+          <i class="fa-solid fa-image text-indigo-600 mr-2"></i>Visual Confusion Matrix & BLEU Comparison Chart
+        </h3>
+        <div class="flex justify-center bg-slate-50 rounded-xl p-3 border border-slate-100">
+          <img src="/static/evaluation_charts.png" alt="NLP Evaluation Charts" class="max-w-full rounded-lg shadow-sm border border-slate-200">
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-4 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+      Project ID: <span class="font-bold text-slate-700">CSEAIML2026-P26</span> | Multilingual AI Assistant for Tourist Information & Translation | Built for NLP
+    </div>
+  </footer>
+
+  <!-- Frontend JavaScript Logic -->
+  <script>
+    // Tab switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove('text-blue-600', 'bg-blue-50');
+        el.classList.add('text-slate-600');
+      });
+
+      const activeContent = document.getElementById('tab-' + tabId);
+      if (activeContent) activeContent.classList.remove('hidden');
+
+      const activeBtn = document.getElementById('tab-btn-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-600');
+        activeBtn.classList.add('text-blue-600', 'bg-blue-50');
+      }
+
+      if (tabId === 'recs') fetchRecommendations();
+      if (tabId === 'offline') fetchPhrasebook();
+    }
+
+    function onUserLangChanged() {
+      const selected = document.getElementById('userLangSelect').value;
+      const touristSelect = document.getElementById('touristLangSelect');
+      if (touristSelect) touristSelect.value = selected;
+    }
+
+    // Chatbot Submit
+    async function handleChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const query = input.value.trim();
+      if (!query) return;
+
+      appendChatMessage(query, 'user');
+      input.value = '';
+
+      const userLang = document.getElementById('userLangSelect').value;
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: query, user_lang: userLang })
+        });
+        const data = await res.json();
+
+        appendChatMessage(data.answer, 'bot', data);
+        updateNlpInspector(data);
+      } catch (err) {
+        appendChatMessage("Sorry, an error occurred while processing your query.", 'bot');
+      }
+    }
+
+    function appendChatMessage(text, sender, meta = null) {
+      const container = document.getElementById('chatMessages');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `flex items-start space-x-3 ${sender === 'user' ? 'justify-end' : ''}`;
+
+      if (sender === 'user') {
+        msgDiv.innerHTML = `
+          <div class="bg-blue-600 text-white rounded-2xl rounded-tr-sm px-4 py-3 max-w-[80%] text-sm shadow-sm">
+            <p>${escapeHtml(text)}</p>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+            <i class="fa-solid fa-user"></i>
+          </div>
+        `;
+      } else {
+        const formattedText = text.replace(/\n/g, '<br>');
+        msgDiv.innerHTML = `
+          <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <div class="bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%] text-sm shadow-sm">
+            <div>${formattedText}</div>
+            <div class="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+              <button onclick="speakText('${encodeURIComponent(text)}')" class="hover:text-blue-600 flex items-center space-x-1">
+                <i class="fa-solid fa-volume-high"></i><span>Listen</span>
+              </button>
+              ${meta ? `<span class="font-mono bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">${meta.intent} (${Math.round(meta.confidence*100)}%)</span>` : ''}
+            </div>
+          </div>
+        `;
+      }
+
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function updateNlpInspector(data) {
+      const panel = document.getElementById('nlpInspectPanel');
+      panel.innerHTML = `
+        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 space-y-1">
+          <div class="flex justify-between">
+            <span class="font-medium text-slate-500">Predicted Intent:</span>
+            <span class="font-bold text-indigo-700">${data.intent}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-slate-500">Confidence:</span>
+            <span class="font-bold text-emerald-600">${(data.confidence * 100).toFixed(1)}%</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-slate-500">Extracted City:</span>
+            <span class="font-semibold text-slate-700">${data.entities.city || 'None detected'}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-slate-500">Extracted POI:</span>
+            <span class="font-semibold text-slate-700">${data.entities.poi || 'None detected'}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-slate-500">Matched Entity:</span>
+            <span class="font-semibold text-blue-700">${data.matched_destination || 'General Knowledge'}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function useQuickPrompt(text) {
+      document.getElementById('chatInput').value = text;
+      document.getElementById('chatSendBtn').click();
+    }
+
+    function clearChat() {
+      document.getElementById('chatMessages').innerHTML = '';
+    }
+
+    // Voice Input via Web Speech API
+    function startVoiceInput() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Speech recognition is not supported in this browser. Please use Chrome or Edge.");
+        return;
+      }
+      const recognition = new SpeechRecognition();
+      const micBtn = document.getElementById('micBtn');
+      micBtn.classList.add('bg-rose-100', 'text-rose-600', 'animate-pulse');
+
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('chatInput').value = transcript;
+        micBtn.classList.remove('bg-rose-100', 'text-rose-600', 'animate-pulse');
+        document.getElementById('chatSendBtn').click();
+      };
+      recognition.onerror = function() {
+        micBtn.classList.remove('bg-rose-100', 'text-rose-600', 'animate-pulse');
+      };
+      recognition.start();
+    }
+
+    // Text to Speech
+    function speakText(encodedText, langCode = 'hi-IN') {
+      const text = decodeURIComponent(encodedText).replace(/[\*\_]/g, '');
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = langCode;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function speakVendorText() {
+      const devanagari = document.getElementById('vendorOutputDevanagari').innerText;
+      speakText(encodeURIComponent(devanagari), 'hi-IN');
+    }
+
+    // Vendor Tab Translation
+    async function translateTouristToVendor() {
+      const text = document.getElementById('touristInput').value.trim();
+      if (!text) return;
+
+      const srcLang = document.getElementById('touristLangSelect').value;
+      const tgtLang = document.getElementById('vendorLangSelect').value;
+      const forceOffline = document.getElementById('offlineToggle').checked;
+
+      const res = await fetch('/api/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text, src_lang: srcLang, tgt_lang: tgtLang, offline: forceOffline })
+      });
+      const data = await res.json();
+
+      document.getElementById('vendorOutputDevanagari').innerText = data.translated_text;
+      document.getElementById('vendorOutputPhonetic').innerText = data.phonetic_transliteration 
+        ? `Phonetic: ${data.phonetic_transliteration}` 
+        : `Category: ${data.category || 'General'}`;
+      document.getElementById('translationModeBadge').innerText = `Mode: ${data.mode || 'Online'}`;
+    }
+
+    async function translateVendorToTourist() {
+      const reply = document.getElementById('vendorReplyInput').value.trim();
+      if (!reply) return;
+
+      const srcLang = document.getElementById('vendorLangSelect').value;
+      const tgtLang = document.getElementById('touristLangSelect').value;
+
+      const res = await fetch('/api/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: reply, src_lang: srcLang, tgt_lang: tgtLang })
+      });
+      const data = await res.json();
+      alert(`Vendor replied:\n"${reply}"\n\nTranslated for you:\n"${data.translated_text}"`);
+    }
+
+    function setTouristPhrase(phrase) {
+      document.getElementById('touristInput').value = phrase;
+      translateTouristToVendor();
+    }
+
+    function onOfflineToggleChanged() {
+      const isChecked = document.getElementById('offlineToggle').checked;
+      const icon = document.getElementById('offlineIcon');
+      const label = document.getElementById('offlineLabel');
+
+      if (isChecked) {
+        icon.className = "fa-solid fa-plane text-amber-500 mr-1.5";
+        label.innerText = "Offline Phrasebook";
+      } else {
+        icon.className = "fa-solid fa-wifi text-emerald-500 mr-1.5";
+        label.innerText = "Online NMT";
+      }
+    }
+
+    // Recommendations Tab
+    async function fetchRecommendations() {
+      const city = document.getElementById('recCitySelect').value;
+      const category = document.getElementById('recCategorySelect').value;
+
+      const res = await fetch('/api/recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ city: city, category: category })
+      });
+      const data = await res.json();
+      renderRecommendations(data.recommendations);
+    }
+
+    function renderRecommendations(items) {
+      const container = document.getElementById('recsGrid');
+      container.innerHTML = '';
+
+      if (!items || items.length === 0) {
+        container.innerHTML = `<div class="col-span-3 text-center py-10 text-slate-400">No destinations found matching filter.</div>`;
+        return;
+      }
+
+      items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex flex-col justify-between hover:border-indigo-300 transition-all";
+        card.innerHTML = `
+          <div>
+            <div class="flex items-start justify-between">
+              <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">${item.category}</span>
+              <span class="text-xs font-bold text-amber-600 flex items-center">
+                <i class="fa-solid fa-star text-amber-400 mr-1"></i>${item.rating || 4.5}
+              </span>
+            </div>
+            <h4 class="font-bold text-slate-800 text-base mt-2">${item.name}</h4>
+            <p class="text-xs text-slate-500 font-medium">${item.city} • ${item.distance_km} km away</p>
+            <p class="text-xs text-slate-600 mt-2.5 line-clamp-3">${item.description}</p>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span class="font-medium text-slate-600">${item.price_level ? item.price_level.split('(')[0] : 'Standard Entry'}</span>
+            <button onclick="useQuickPrompt('Tell me how to reach ${item.name} and ticket details'); switchTab('chat');" class="text-blue-600 hover:text-blue-800 font-semibold flex items-center space-x-1">
+              <span>Ask Guide</span>
+              <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Offline Phrasebook
+    async function fetchPhrasebook() {
+      const category = document.getElementById('phraseCategorySelect').value;
+      const res = await fetch(`/api/phrases?category=${encodeURIComponent(category)}`);
+      const data = await res.json();
+      renderPhraseTable(data.phrases);
+    }
+
+    function renderPhraseTable(phrases) {
+      const tbody = document.getElementById('phraseTableBody');
+      tbody.innerHTML = '';
+
+      phrases.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition-colors";
+        tr.innerHTML = `
+          <td class="px-6 py-3 font-semibold text-xs text-indigo-700">${p.category}</td>
+          <td class="px-6 py-3 font-medium text-slate-800">${p.english}</td>
+          <td class="px-6 py-3 font-bold text-slate-900">${p.hindi}</td>
+          <td class="px-6 py-3 font-mono text-xs text-slate-600 bg-slate-50/70">${p.phonetic_transliteration}</td>
+          <td class="px-6 py-3 text-center">
+            <button onclick="speakText('${encodeURIComponent(p.hindi)}', 'hi-IN')" class="text-slate-400 hover:text-blue-600 p-1.5 rounded-lg hover:bg-blue-50 transition-all">
+              <i class="fa-solid fa-volume-high"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    // Initialize first recommendations on load
+    window.onload = function() {
+      fetchRecommendations();
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+{
+  "categories": [
+    "Bargaining & Shopping",
+    "Transport & Directions",
+    "Food & Dietary",
+    "Emergency & Medical",
+    "Basic Greetings & Courtesy"
+  ],
+  "phrases": [
+    {
+      "id": "p01",
+      "category": "Bargaining & Shopping",
+      "english": "How much does this cost?",
+      "hindi": "यह कितने का है?",
+      "phonetic_transliteration": "Yeh kitne ka hai?",
+      "spanish": "¿Cuánto cuesta esto?",
+      "french": "Combien cela coûte-t-il ?",
+      "german": "Wie viel kostet das?",
+      "japanese": "これはいくらですか？"
+    },
+    {
+      "id": "p02",
+      "category": "Bargaining & Shopping",
+      "english": "This is too expensive. Can you give a discount?",
+      "hindi": "यह बहुत महंगा है। क्या आप कुछ कम करेंगे?",
+      "phonetic_transliteration": "Yeh bahut mehenga hai. Kya aap kuch kam karenge?",
+      "spanish": "Es demasiado caro. ¿Puede hacer un descuento?",
+      "french": "C'est trop cher. Pouvez-vous faire une réduction ?",
+      "german": "Das ist zu teuer. Können Sie einen Rabatt geben?",
+      "japanese": "高すぎます。安くしてもらえますか？"
+    },
+    {
+      "id": "p03",
+      "category": "Bargaining & Shopping",
+      "english": "What is your final price?",
+      "hindi": "आपका अंतिम दाम क्या है?",
+      "phonetic_transliteration": "Aapka antim daam kya hai?",
+      "spanish": "¿Cuál es su precio final?",
+      "french": "Quel est votre dernier prix ?",
+      "german": "Was ist Ihr letzter Preis?",
+      "japanese": "最終価格はいくらですか？"
+    },
+    {
+      "id": "p04",
+      "category": "Bargaining & Shopping",
+      "english": "Do you accept digital payment or UPI?",
+      "hindi": "क्या आप यूपीआई या ऑनलाइन पेमेंट लेते हैं?",
+      "phonetic_transliteration": "Kya aap UPI ya online payment lete hain?",
+      "spanish": "¿Acepta pago digital o tarjeta?",
+      "french": "Acceptez-vous le paiement numérique ?",
+      "german": "Akzeptieren Sie digitale Zahlung?",
+      "japanese": "電子決済は利用できますか？"
+    },
+    {
+      "id": "p05",
+      "category": "Transport & Directions",
+      "english": "Please turn on the meter.",
+      "hindi": "कृपया मीटर चालू कीजिए।",
+      "phonetic_transliteration": "Kripya meter chaaloo kijiye.",
+      "spanish": "Por favor, ponga el taxímetro.",
+      "french": "Veuillez mettre le compteur.",
+      "german": "Bitte schalten Sie das Taxameter ein.",
+      "japanese": "メーターを使ってください。"
+    },
+    {
+      "id": "p06",
+      "category": "Transport & Directions",
+      "english": "How do I get to the railway station?",
+      "hindi": "रेलवे स्टेशन कैसे जाऊं?",
+      "phonetic_transliteration": "Railway station kaise jaaoon?",
+      "spanish": "¿Cómo llego a la estación de tren?",
+      "french": "Comment aller à la gare ferroviaire ?",
+      "german": "Wie komme ich zum Bahnhof?",
+      "japanese": "駅にはどうやって行けばいいですか？"
+    },
+    {
+      "id": "p07",
+      "category": "Transport & Directions",
+      "english": "Please stop here.",
+      "hindi": "कृपया यहाँ रोकिए।",
+      "phonetic_transliteration": "Kripya yahan rokiye.",
+      "spanish": "Por favor, pare aquí.",
+      "french": "Arrêtez-vous ici, s'il vous plaît.",
+      "german": "Bitte halten Sie hier an.",
+      "japanese": "ここで止まってください。"
+    },
+    {
+      "id": "p08",
+      "category": "Transport & Directions",
+      "english": "Is this the correct way to the monument?",
+      "hindi": "क्या यह स्मारक का सही रास्ता है?",
+      "phonetic_transliteration": "Kya yeh smarak ka sahi raasta hai?",
+      "spanish": "¿Es este el camino correcto al monumento?",
+      "french": "Est-ce le bon chemin pour le monument ?",
+      "german": "Ist das der richtige Weg zum Denkmal?",
+      "japanese": "この記念碑への道はこれで合っていますか？"
+    },
+    {
+      "id": "p09",
+      "category": "Food & Dietary",
+      "english": "Please make it non-spicy / mild.",
+      "hindi": "कृपया तीखा मत बनाइए / कम तीखा रखिए।",
+      "phonetic_transliteration": "Kripya teekha mat banaiye / kam teekha rakhiye.",
+      "spanish": "Por favor, sin picante o poco picante.",
+      "french": "Pas épicé, s'il vous plaît.",
+      "german": "Bitte nicht scharf / mild zubereiten.",
+      "japanese": "辛くしないでください。"
+    },
+    {
+      "id": "p10",
+      "category": "Food & Dietary",
+      "english": "Is this 100% vegetarian?",
+      "hindi": "क्या यह पूरी तरह शाकाहारी है?",
+      "phonetic_transliteration": "Kya yeh poori tarah shaakahari hai?",
+      "spanish": "¿Esto es 100% vegetariano?",
+      "french": "Est-ce 100% végétarien ?",
+      "german": "Ist das rein vegetarisch?",
+      "japanese": "これは100％ベジタリアン料理ですか？"
+    },
+    {
+      "id": "p11",
+      "category": "Food & Dietary",
+      "english": "Please bring bottled drinking water.",
+      "hindi": "कृपया बंद बोतल का पीने का पानी दीजिए।",
+      "phonetic_transliteration": "Kripya band bottle ka peene ka paani dijiye.",
+      "spanish": "Por favor, traiga agua embotellada sellada.",
+      "french": "De l'eau en bouteille fermée, s'il vous plaît.",
+      "german": "Bitte eine verschlossene Wasserflasche bringen.",
+      "japanese": "ボトル入りの水をお願いします。"
+    },
+    {
+      "id": "p12",
+      "category": "Emergency & Medical",
+      "english": "I need help immediately! Call the police.",
+      "hindi": "मुझे तुरंत मदद चाहिए! पुलिस को बुलाइए।",
+      "phonetic_transliteration": "Mujhe turant madad chahiye! Police ko bulaiye.",
+      "spanish": "¡Necesito ayuda inmediatamente! Llame a la policía.",
+      "french": "J'ai besoin d'aide immédiatement ! Appelez la police.",
+      "german": "Ich brauche sofort Hilfe! Rufen Sie die Polizei.",
+      "japanese": "助けてください！警察を呼んでください。"
+    },
+    {
+      "id": "p13",
+      "category": "Emergency & Medical",
+      "english": "Where is the nearest hospital or pharmacy?",
+      "hindi": "नज़दीकी अस्पताल या दवा की दुकान कहाँ है?",
+      "phonetic_transliteration": "Nazdeeki aspatal ya dawa ki dukaan kahan hai?",
+      "spanish": "¿Dónde está el hospital o farmacia más cercana?",
+      "french": "Où se trouve l'hôpital ou la pharmacie la plus proche ?",
+      "german": "Wo ist das nächste Krankenhaus oder die Apotheke?",
+      "japanese": "最寄りの病院や薬局はどこですか？"
+    },
+    {
+      "id": "p14",
+      "category": "Emergency & Medical",
+      "english": "I lost my passport and wallet.",
+      "hindi": "मेरा पासपोर्ट और बटुआ खो गया है।",
+      "phonetic_transliteration": "Mera passport aur batua kho gaya hai.",
+      "spanish": "He perdido mi pasaporte y mi cartera.",
+      "french": "J'ai perdu mon passeport et mon portefeuille.",
+      "german": "Ich habe meinen Pass und meine Brieftasche verloren.",
+      "japanese": "パスポートと財布をなくしました。"
+    },
+    {
+      "id": "p15",
+      "category": "Basic Greetings & Courtesy",
+      "english": "Hello / Greetings!",
+      "hindi": "नमस्ते!",
+      "phonetic_transliteration": "Namaste!",
+      "spanish": "¡Hola!",
+      "french": "Bonjour !",
+      "german": "Hallo / Guten Tag!",
+      "japanese": "こんにちは！"
+    },
+    {
+      "id": "p16",
+      "category": "Basic Greetings & Courtesy",
+      "english": "Thank you very much.",
+      "hindi": "बहुत-बहुत धन्यवाद / शुक्रिया।",
+      "phonetic_transliteration": "Bahut bahut dhanyavaad / shukriya.",
+      "spanish": "Muchas gracias.",
+      "french": "Merci beaucoup.",
+      "german": "Vielen Dank.",
+      "japanese": "どうもありがとうございます。"
+    },
+    {
+      "id": "p17",
+      "category": "Basic Greetings & Courtesy",
+      "english": "Do you speak English?",
+      "hindi": "क्या आप अंग्रेज़ी बोलते हैं?",
+      "phonetic_transliteration": "Kya aap angrezi bolte hain?",
+      "spanish": "¿Habla inglés?",
+      "french": "Parlez-vous anglais ?",
+      "german": "Sprechen Sie Englisch?",
+      "japanese": "英語を話せますか？"
+    }
+  ]
+}

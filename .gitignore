@@ -1,0 +1,24 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+.venv/
+env/
+venv/
+
+# Large Model Checkpoints & Weights (>100MB exceeds GitHub push limits)
+models/custom_en_hi_model/checkpoint-*/
+models/custom_en_hi_model/*.safetensors
+*.pt
+*.pth
+*.bin
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
